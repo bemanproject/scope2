@@ -2,25 +2,20 @@
 
 cmake_minimum_required(VERSION 3.25)
 
-project(
-    beman.exemplar # CMake Project Name, which is also the name of the top-level
-    # targets (e.g., library, executable, etc.).
-    DESCRIPTION "A Beman library exemplar"
-    LANGUAGES CXX
-)
+project(beman.scope DESCRIPTION "Generic Scope Guard" LANGUAGES CXX)
 
 enable_testing()
 
 # [CMAKE.SKIP_TESTS]
 option(
-    BEMAN_EXEMPLAR_BUILD_TESTS
+    BEMAN_SCOPE_BUILD_TESTS
     "Enable building tests and test infrastructure. Default: ON. Values: { ON, OFF }."
     ${PROJECT_IS_TOP_LEVEL}
 )
 
 # [CMAKE.SKIP_EXAMPLES]
 option(
-    BEMAN_EXEMPLAR_BUILD_EXAMPLES
+    BEMAN_SCOPE_BUILD_EXAMPLES
     "Enable building examples. Default: ON. Values: { ON, OFF }."
     ${PROJECT_IS_TOP_LEVEL}
 )
@@ -28,7 +23,7 @@ option(
 include(FetchContent)
 include(GNUInstallDirs)
 
-if(BEMAN_EXEMPLAR_BUILD_TESTS)
+if(BEMAN_SCOPE_BUILD_TESTS)
     # Fetch GoogleTest
     FetchContent_Declare(
         googletest
@@ -41,12 +36,12 @@ if(BEMAN_EXEMPLAR_BUILD_TESTS)
     FetchContent_MakeAvailable(googletest)
 endif()
 
-add_subdirectory(src/beman/exemplar)
+add_subdirectory(src/beman/scope)
 
-if(BEMAN_EXEMPLAR_BUILD_TESTS)
-    add_subdirectory(tests/beman/exemplar)
+if(BEMAN_SCOPE_BUILD_TESTS)
+    add_subdirectory(tests/beman/scope)
 endif()
 
-if(BEMAN_EXEMPLAR_BUILD_EXAMPLES)
+if(BEMAN_SCOPE_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()

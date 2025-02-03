@@ -2,13 +2,13 @@
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 
-# beman.exemplar: A Beman Library Exemplar
+# beman.scope: Generic Scope Guard
 
 ![Library Status](https://github.com/bemanproject/beman/blob/c6997986557ec6dda98acbdf502082cdf7335526/images/badges/beman_badge-beman_library_under_development.svg)
-![Continuous Integration Tests](https://github.com/bemanproject/exemplar/actions/workflows/ci_tests.yml/badge.svg)
-![Lint Check (pre-commit)](https://github.com/bemanproject/exemplar/actions/workflows/pre-commit.yml/badge.svg)
+![Continuous Integration Tests](https://github.com/bemanproject/scope/actions/workflows/ci_tests.yml/badge.svg)
+![Lint Check (pre-commit)](https://github.com/bemanproject/scope/actions/workflows/pre-commit.yml/badge.svg)
 
-`beman.exemplar` is a minimal C++ library conforming to [The Beman Standard](https://github.com/bemanproject/beman/blob/main/docs/BEMAN_STANDARD.md).
+`beman.scope` is a minimal C++ library conforming to [The Beman Standard](https://github.com/bemanproject/beman/blob/main/docs/BEMAN_STANDARD.md).
 This can be used as a template for those intending to write Beman libraries.
 It may also find use as a minimal and modern  C++ project structure.
 
@@ -22,66 +22,13 @@ It may also find use as a minimal and modern  C++ project structure.
 `std::identity` serves as the default projection in constrained algorithms.
 Its direct usage is usually not needed.
 
-### Usage: default projection in constrained algorithms
+### Example Usage
 
- The following code snippet illustrates how we can achieve a default projection using `beman::exemplar::identity`:
+TODO
 
-```cpp
-#include <beman/exemplar/identity.hpp>
+Full runnable examples can be found in `examples/`.
 
-namespace exe = beman::exemplar;
-
-// Class with a pair of values.
-struct Pair
-{
-    int n;
-    std::string s;
-
-    // Output the pair in the form {n, s}.
-    // Used by the range-printer if no custom projection is provided (default: identity projection).
-    friend std::ostream &operator<<(std::ostream &os, const Pair &p)
-    {
-        return os << "Pair" << '{' << p.n << ", " << p.s << '}';
-    }
-};
-
-// A range-printer that can print projected (modified) elements of a range.
-// All the elements of the range are printed in the form {element1, element2, ...}.
-// e.g., pairs with identity: Pair{1, one}, Pair{2, two}, Pair{3, three}
-// e.g., pairs with custom projection: {1:one, 2:two, 3:three}
-template <std::ranges::input_range R,
-          typename Projection>
-void print(const std::string_view rem, R &&range, Projection projection = exe::identity>)
-{
-    std::cout << rem << '{';
-    std::ranges::for_each(
-        range,
-        [O = 0](const auto &o) mutable
-        { std::cout << (O++ ? ", " : "") << o; },
-        projection);
-    std::cout << "}\n";
-};
-
-int main()
-{
-    // A vector of pairs to print.
-    const std::vector<Pair> pairs = {
-        {1, "one"},
-        {2, "two"},
-        {3, "three"},
-    };
-
-    // Print the pairs using the default projection.
-    print("\tpairs with beman: ", pairs);
-
-    return 0;
-}
-
-```
-
-Full runnable examples can be found in `examples/` (e.g., [./examples/identity_as_default_projection.cpp](./examples/identity_as_default_projection.cpp)).
-
-## Building beman.exemplar
+## Building beman.scope
 
 ### Dependencies
 <!-- TODO Darius: rewrite section!-->
@@ -99,7 +46,7 @@ Build-time dependencies:
 <!-- TODO Darius: rewrite section!-->
 
 <details>
-<summary>Dependencies install exemplar on Ubuntu 24.04  </summary>
+<summary>Dependencies install scope on Ubuntu 24.04  </summary>
 
 <!-- TODO Darius: rewrite section!-->
 
@@ -116,7 +63,7 @@ apt-get install                           \
 </details>
 
 <details>
-<summary>Dependencies install exemplar on MAC OS $VERSION </summary>
+<summary>Dependencies install scope on MAC OS $VERSION </summary>
 
 <!-- TODO Darius: rewrite section!-->
 ```shell
@@ -126,7 +73,7 @@ apt-get install                           \
 </details>
 
 <details>
-<summary>Dependencies install exemplar on Windows $VERSION  </summary>
+<summary>Dependencies install scope on Windows $VERSION  </summary>
 <!-- TODO Darius: rewrite section!-->
 
 ```shell
@@ -135,23 +82,23 @@ apt-get install                           \
 
 </details>
 
-### How to build beman.exemplar
+### How to build beman.scope
 
 This project strives to be as normal and simple a CMake project as possible.
 This build workflow in particular will work,
-producing a static `libbeman.exemplar.a` library, ready to package with its headers:
+producing a static `libbeman.scope.a` library, ready to package with its headers:
 
 ```shell
 cmake --workflow --preset gcc-debug
 cmake --workflow --preset gcc-release
-cmake --install build/gcc-release --prefix /opt/beman.exemplar
+cmake --install build/gcc-release --prefix /opt/beman.scope
 ```
 
 <details>
-<summary> Build beman.exemplar (verbose logs) </summary>
+<summary> Build beman.scope (verbose logs) </summary>
 
 ```shell
-# Configure beman.exemplar via gcc-debug workflow for development.
+# Configure beman.scope via gcc-debug workflow for development.
 $ cmake --workflow --preset gcc-debug
 Executing workflow step 1 of 3: configure preset "gcc-debug"
 
@@ -180,16 +127,16 @@ Preset CMake variables:
 -- Found Threads: TRUE
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/runner/work/exemplar/exemplar/build/gcc-debug
+-- Build files have been written to: /home/runner/work/scope/exemplar/build/gcc-debug
 
 Executing workflow step 2 of 3: build preset "gcc-debug"
 
-[1/14] Building CXX object src/beman/exemplar/CMakeFiles/beman.exemplar.dir/identity.cpp.o
-[2/14] Linking CXX static library src/beman/exemplar/libbeman.exemplar.a
-[3/14] Building CXX object examples/CMakeFiles/beman.exemplar.examples.identity_direct_usage.dir/identity_direct_usage.cpp.o
-[4/14] Linking CXX executable examples/beman.exemplar.examples.identity_direct_usage
+[1/14] Building CXX object src/beman/scope/CMakeFiles/beman.exemplar.dir/identity.cpp.o
+[2/14] Linking CXX static library src/beman/scope/libbeman.exemplar.a
+[3/14] Building CXX object examples/CMakeFiles/beman.scope.examples.identity_direct_usage.dir/identity_direct_usage.cpp.o
+[4/14] Linking CXX executable examples/beman.scope.examples.identity_direct_usage
 [5/14] Building CXX object _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o
-[6/14] Building CXX object src/beman/exemplar/CMakeFiles/beman.exemplar.tests.dir/identity.t.cpp.o
+[6/14] Building CXX object src/beman/scope/CMakeFiles/beman.exemplar.tests.dir/identity.t.cpp.o
 [7/14] Building CXX object _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o
 [8/14] Building CXX object _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o
 [9/14] Building CXX object _deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o
@@ -197,11 +144,11 @@ Executing workflow step 2 of 3: build preset "gcc-debug"
 [11/14] Linking CXX static library lib/libgtest_main.a
 [12/14] Linking CXX static library lib/libgmock.a
 [13/14] Linking CXX static library lib/libgmock_main.a
-[14/14] Linking CXX executable src/beman/exemplar/beman.exemplar.tests
+[14/14] Linking CXX executable src/beman/scope/beman.exemplar.tests
 
 Executing workflow step 3 of 3: test preset "gcc-debug"
 
-Test project /home/runner/work/exemplar/exemplar/build/gcc-debug
+Test project /home/runner/work/scope/exemplar/build/gcc-debug
     Start 1: IdentityTest.call_identity_with_int
 1/4 Test #1: IdentityTest.call_identity_with_int ...........   Passed    0.13 sec
     Start 2: IdentityTest.call_identity_with_custom_type
@@ -215,7 +162,7 @@ Test project /home/runner/work/exemplar/exemplar/build/gcc-debug
 
 Total Test time (real) =   0.18 sec
 
-# Configure beman.exemplar via gcc-release workflow for direct usage.
+# Configure beman.scope via gcc-release workflow for direct usage.
 $ cmake --workflow --preset gcc-release
 Executing workflow step 1 of 3: configure preset "gcc-release"
 
@@ -244,28 +191,28 @@ Preset CMake variables:
 -- Found Threads: TRUE
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/runner/work/exemplar/exemplar/build/gcc-release
+-- Build files have been written to: /home/runner/work/scope/exemplar/build/gcc-release
 
 Executing workflow step 2 of 3: build preset "gcc-release"
 
-[1/14] Building CXX object src/beman/exemplar/CMakeFiles/beman.exemplar.dir/identity.cpp.o
-[2/14] Linking CXX static library src/beman/exemplar/libbeman.exemplar.a
-[3/14] Building CXX object examples/CMakeFiles/beman.exemplar.examples.identity_direct_usage.dir/identity_direct_usage.cpp.o
-[4/14] Linking CXX executable examples/beman.exemplar.examples.identity_direct_usage
+[1/14] Building CXX object src/beman/scope/CMakeFiles/beman.exemplar.dir/identity.cpp.o
+[2/14] Linking CXX static library src/beman/scope/libbeman.exemplar.a
+[3/14] Building CXX object examples/CMakeFiles/beman.scope.examples.identity_direct_usage.dir/identity_direct_usage.cpp.o
+[4/14] Linking CXX executable examples/beman.scope.examples.identity_direct_usage
 [5/14] Building CXX object _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o
-[6/14] Building CXX object src/beman/exemplar/CMakeFiles/beman.exemplar.tests.dir/identity.t.cpp.o
+[6/14] Building CXX object src/beman/scope/CMakeFiles/beman.exemplar.tests.dir/identity.t.cpp.o
 [7/14] Building CXX object _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o
 [8/14] Building CXX object _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o
 [9/14] Building CXX object _deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o
 [10/14] Linking CXX static library lib/libgtest.a
 [11/14] Linking CXX static library lib/libgtest_main.a
 [12/14] Linking CXX static library lib/libgmock.a
-[13/14] Linking CXX executable src/beman/exemplar/beman.exemplar.tests
+[13/14] Linking CXX executable src/beman/scope/beman.exemplar.tests
 [14/14] Linking CXX static library lib/libgmock_main.a
 
 Executing workflow step 3 of 3: test preset "gcc-release"
 
-Test project /home/runner/work/exemplar/exemplar/build/gcc-release
+Test project /home/runner/work/scope/exemplar/build/gcc-release
     Start 1: IdentityTest.call_identity_with_int
 1/4 Test #1: IdentityTest.call_identity_with_int ...........   Passed    0.00 sec
     Start 2: IdentityTest.call_identity_with_custom_type
@@ -280,7 +227,7 @@ Test project /home/runner/work/exemplar/exemplar/build/gcc-release
 Total Test time (real) =   0.01 sec
 
 # Run examples.
-$ build/gcc-release/examples/beman.exemplar.examples.identity_direct_usage
+$ build/gcc-release/examples/beman.scope.examples.identity_direct_usage
 2024
 
 ```
@@ -288,25 +235,25 @@ $ build/gcc-release/examples/beman.exemplar.examples.identity_direct_usage
 </details>
 
 <details>
-<summary> Install beman.exemplar (verbose logs) </summary>
+<summary> Install beman.scope (verbose logs) </summary>
 
 ```shell
-# Install build artifacts from `build` directory into `opt/beman.exemplar` path.
-$ cmake --install build/gcc-release --prefix /opt/beman.exemplar
+# Install build artifacts from `build` directory into `opt/beman.scope` path.
+$ cmake --install build/gcc-release --prefix /opt/beman.scope
 -- Install configuration: "RelWithDebInfo"
--- Up-to-date: /opt/beman.exemplar/lib/libbeman.exemplar.a
--- Up-to-date: /opt/beman.exemplar/include/beman/exemplar/identity.hpp
+-- Up-to-date: /opt/beman.scope/lib/libbeman.exemplar.a
+-- Up-to-date: /opt/beman.scope/include/beman/exemplar/identity.hpp
 
 
 # Check tree.
-$ tree /opt/beman.exemplar
-/opt/beman.exemplar
+$ tree /opt/beman.scope
+/opt/beman.scope
 ├── include
 │   └── beman
-│       └── exemplar
+│       └── scope
 │           └── identity.hpp
 └── lib
-    └── libbeman.exemplar.a
+    └── libbeman.scope.a
 
 4 directories, 2 files
 ```
@@ -325,57 +272,57 @@ cmake -B build -S . -DBEMAN_EXEMPLAR_BUILD_TESTING=OFF
 
 </details>
 
-## Integrate beman.exemplar into your project
+## Integrate beman.scope into your project
 
 <details>
-<summary> Use beman.exemplar directly from C++ </summary>
+<summary> Use beman.scope directly from C++ </summary>
 <!-- TODO Darius: rewrite section!-->
 
-If you want to use `beman.exemplar` from your project,
-you can include `beman/exemplar/*.hpp`  files from your C++ source files
+If you want to use `beman.scope` from your project,
+you can include `beman/scope/*.hpp`  files from your C++ source files
 
 ```cpp
-#include <beman/exemplar/identity.hpp>
+#include <beman/scope/identity.hpp>
 ```
 
-and directly link with `libbeman.exemplar.a`
+and directly link with `libbeman.scope.a`
 
 ```shell
-# Assume /opt/beman.exemplar staging directory.
+# Assume /opt/beman.scope staging directory.
 $ c++ -o identity_usage examples/identity_usage.cpp \
-    -I /opt/beman.exemplar/include/ \
-    -L/opt/beman.exemplar/lib/ -lbeman.exemplar
+    -I /opt/beman.scope/include/ \
+    -L/opt/beman.scope/lib/ -lbeman.exemplar
 ```
 
 </details>
 
 <details>
-<summary> Use beman.exemplar directly from CMake </summary>
+<summary> Use beman.scope directly from CMake </summary>
 
 <!-- TODO Darius: rewrite section! Add examples. -->
 
-For CMake based projects, you will need to use the `beman.exemplar` CMake module to define the `beman::exemplar` CMake target:
+For CMake based projects, you will need to use the `beman.scope` CMake module to define the `beman::exemplar` CMake target:
 
 ```cmake
-find_package(beman.exemplar REQUIRED)
+find_package(beman.scope REQUIRED)
 ```
 
-You will also need to add `beman::exemplar`
-to the link libraries of any libraries or executables that include `beman/exemplar/*.hpp` in their source or header file.
+You will also need to add `beman::scope`
+to the link libraries of any libraries or executables that include `beman/scope/*.hpp` in their source or header file.
 
 ```cmake
-target_link_libraries(yourlib PUBLIC beman::exemplar)
+target_link_libraries(yourlib PUBLIC beman::scope)
 ```
 
 </details>
 
 <details>
-<summary> Use beman.exemplar from other build systems </summary>
+<summary> Use beman.scope from other build systems </summary>
 
 <!-- TODO Darius: rewrite section! Add examples. -->
 
-Build systems that support `pkg-config` by providing a `beman.exemplar.pc` file.
-Build systems that support interoperation via `pkg-config` should be able to detect `beman.exemplar` for you automatically.
+Build systems that support `pkg-config` by providing a `beman.scope.pc` file.
+Build systems that support interoperation via `pkg-config` should be able to detect `beman.scope` for you automatically.
 
 </details>
 
