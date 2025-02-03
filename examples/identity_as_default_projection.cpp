@@ -5,7 +5,7 @@
 // TODO Darius: Do we need to selectively compile this example?
 // Or should we assume that this project is compiled with C++20 support only?
 
-#include <beman/exemplar/identity.hpp>
+#include <beman/scope/identity.hpp>
 
 #include <algorithm>
 #include <functional> // std::identity
