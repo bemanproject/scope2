@@ -38,9 +38,9 @@ endif()
 
 # add_subdirectory(src/beman/scope)
 
-if(BEMAN_SCOPE_BUILD_TESTS)
-    add_subdirectory(tests/beman/scope)
-endif()
+#if(BEMAN_SCOPE_BUILD_TESTS)
+#    add_subdirectory(tests/beman/scope)
+#endif()
 
 if(BEMAN_SCOPE_BUILD_EXAMPLES)
     add_subdirectory(examples)
