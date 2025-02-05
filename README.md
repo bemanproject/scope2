@@ -106,7 +106,7 @@ apt-get install                           \
 
 ### How to build beman.scope
 
-Beman scope is header only. 
+Beman scope is header only.
 
 ```shell
 cmake --workflow --preset gcc-debug
