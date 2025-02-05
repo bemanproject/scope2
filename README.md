@@ -15,6 +15,7 @@ During the C++20 cycle [P0052 Generic Scope Guard and RAII Wrapper for the Stand
 For discussions of this library see:
 
 - [Discourse for discussion of scope](https://discourse.bemanproject.org/t/scope-library/315)
+
 # Prior And Other Work
 
 ## Papers
@@ -34,6 +35,7 @@ For discussions of this library see:
 
 - [Peter Sommerlad - Woes of Scope Guards and Unique_Resource - 5+ years in the making](https://www.youtube.com/watch?v=O1sK__G5Nrg)
 - [Andrei Alexandrescu - Declarative Control Flow](https://www.youtube.com/watch?v=WjTrfoiB0MQ)
+
 # Examples
 
 - [TS example of scope_exit](https://godbolt.org/z/T5KhTYjP7)
