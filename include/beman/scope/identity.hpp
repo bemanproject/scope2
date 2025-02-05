@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef BEMAN_EXEMPLAR_IDENTITY_HPP
-#define BEMAN_EXEMPLAR_IDENTITY_HPP
+#ifndef BEMAN_SCOPE_HPP
+#define BEMAN_SCOPE_HPP
 
 // C++ Standard Library: std::identity equivalent.
 // See https://eel.is/c++draft/func.identity:
@@ -39,4 +39,4 @@ struct identity {
 
 } // namespace beman::exemplar
 
-#endif // BEMAN_EXEMPLAR_IDENTITY_HPP
+#endif // BEMAN_SCOPE_HPP
