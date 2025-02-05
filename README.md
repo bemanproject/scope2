@@ -15,13 +15,13 @@ For discussions of this library see:
 - [Discourse for discussion of scope](https://discourse.bemanproject.org/t/scope-library/315)
 # Prior And Other Work
 ## Papers
-- TS design and wording paper [p0052 - Generic Scope Guard and RAII Wrapper for the Standard Library](https://wg21.link/p0052) 
+- TS design and wording paper [p0052 - Generic Scope Guard and RAII Wrapper for the Standard Library](https://wg21.link/p0052)
 - TS adoption paper [p1411 - Please reconsider <scope> for C++20](https://wg21.link/p1411)
 - [N3677 A Proposal to Add additional RAII Wrappers to the Standard Library](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3677.html)
 - [N4152 uncaught_exceptions - Sutter](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4152.pdf)
 
 ## Implementations
-- [GSL final_action](https://github.com/microsoft/GSL/blob/main/include/gsl/util) - part of core guidelins
+- [GSL final_action](https://github.com/microsoft/GSL/blob/main/include/gsl/util) - part of core guidelines
 - [Boost.scope](https://www.boost.org/doc/libs/1_87_0/libs/scope/doc/html/index.html)
 - [scope_guard based on Andrei Alexandrescu and Petru Marginean article](https://ricab.github.io/scope_guard)
 
@@ -52,7 +52,6 @@ Full runnable examples can be found in `examples/`.
 ## Building beman.scope
 
 ### Dependencies
-<!-- TODO Darius: rewrite section!-->
 
 This project has no C or C++ dependencies.
 
