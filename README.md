@@ -15,7 +15,6 @@ During the C++20 cycle [P0052 Generic Scope Guard and RAII Wrapper for the Stand
 For discussions of this library see:
 
 - [Discourse for discussion of scope](https://discourse.bemanproject.org/t/scope-library/315)
-  
 # Prior And Other Work
 
 ## Papers
