@@ -28,7 +28,6 @@ For discussions of this library see:
 ## Videos
 - [Peter Sommerlad - Woes of Scope Guards and Unique_Resource - 5+ years in the making](https://www.youtube.com/watch?v=O1sK__G5Nrg)
 - [Andrei Alexandrescu - Declarative Control Flow](https://www.youtube.com/watch?v=WjTrfoiB0MQ)
-  
 # Examples
 - [TS example of scope_exit](https://godbolt.org/z/T5KhTYjP7)
 
