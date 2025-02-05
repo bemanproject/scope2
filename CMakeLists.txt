@@ -36,7 +36,7 @@ if(BEMAN_SCOPE_BUILD_TESTS)
     FetchContent_MakeAvailable(googletest)
 endif()
 
-add_subdirectory(src/beman/scope)
+# add_subdirectory(src/beman/scope)
 
 if(BEMAN_SCOPE_BUILD_TESTS)
     add_subdirectory(tests/beman/scope)
