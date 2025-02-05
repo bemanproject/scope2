@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.25)
 
 project(beman.scope DESCRIPTION "Generic Scope Guard" LANGUAGES CXX)
 
-enable_testing()
+# enable_testing()
 
 # [CMAKE.SKIP_TESTS]
 option(
