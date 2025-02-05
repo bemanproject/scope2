@@ -9,12 +9,14 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ![Lint Check (pre-commit)](https://github.com/bemanproject/scope/actions/workflows/pre-commit.yml/badge.svg)
 
 # Overview
+
 During the C++20 cycle [P0052 Generic Scope Guard and RAII Wrapper for the Standard Library](https://wg21.link/P0052) added 4 types: `scope_exit`, `scope_fail`, `scope_success` and `unique_resource` to [LTFSv3](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/n4908#scopeguard).  In the intervening time, two standard libraries have implemented support as well as Boost. With the imperative for safety and security in C++ developers need every tool in the toolbox. The authors believe it is time to move this facility into the standard.  The paper will re-examine the five year old design and any learning from deployment of the LTFSv3.
 
 For discussions of this library see:
 - [Discourse for discussion of scope](https://discourse.bemanproject.org/t/scope-library/315)
   
 # Prior And Other Work
+
 ## Papers
 
 - TS design and wording paper [p0052 - Generic Scope Guard and RAII Wrapper for the Standard Library](https://wg21.link/p0052)
