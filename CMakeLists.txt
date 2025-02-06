@@ -20,7 +20,6 @@ option(
     ${PROJECT_IS_TOP_LEVEL}
 )
 
-include(FetchContent)
 include(GNUInstallDirs)
 
 add_subdirectory(src/beman/scope)
