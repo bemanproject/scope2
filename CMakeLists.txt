@@ -23,7 +23,7 @@ option(
 include(FetchContent)
 include(GNUInstallDirs)
 
-# add_subdirectory(src/beman/scope)
+add_subdirectory(src/beman/scope)
 
 #if(BEMAN_SCOPE_BUILD_TESTS)
 #    add_subdirectory(tests/beman/scope)
