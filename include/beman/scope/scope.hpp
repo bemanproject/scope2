@@ -93,7 +93,6 @@ namespace beman::scope {
 //        template <typename R, typename D>
 //        unique_resource(R, D) -> unique_resource<R, D>;
 
-
 // TODO: Implement
 struct scope_exit {
     template <typename F>
