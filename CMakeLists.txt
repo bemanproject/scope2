@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.25)
 
 project(beman.scope DESCRIPTION "Generic Scope Guard" LANGUAGES CXX)
 
-# enable_testing()
+enable_testing()
 
 # [CMAKE.SKIP_TESTS]
 option(
@@ -20,14 +20,13 @@ option(
     ${PROJECT_IS_TOP_LEVEL}
 )
 
-include(FetchContent)
 include(GNUInstallDirs)
 
-# add_subdirectory(src/beman/scope)
+add_subdirectory(src/beman/scope)
 
-#if(BEMAN_SCOPE_BUILD_TESTS)
-#    add_subdirectory(tests/beman/scope)
-#endif()
+if(BEMAN_SCOPE_BUILD_TESTS)
+    add_subdirectory(tests/beman/scope)
+endif()
 
 if(BEMAN_SCOPE_BUILD_EXAMPLES)
     add_subdirectory(examples)

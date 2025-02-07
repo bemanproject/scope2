@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/scope/scope.hpp>
+
 #include <cstdlib>
-#include <experimental/scope>
 #include <iostream>
 #include <string_view>
+
+namespace scope = beman::scope;
 
 void print_exit_status(std::string_view name, bool exit_status, bool did_throw) {
     std::cout << name << ":\n";
@@ -32,7 +35,7 @@ int main() {
     // Using scope_exit: runs on scope exit (success or exception)
     exit_status = did_throw = false;
     try {
-        auto guard = std::experimental::scope_exit{[&] { exit_status = true; }};
+        auto guard = scope::scope_exit{[&] { exit_status = true; }};
         maybe_throw();
     } catch (...) {
         did_throw = true;
@@ -42,7 +45,7 @@ int main() {
     // Using scope_fail: runs only if an exception occurs
     exit_status = did_throw = false;
     try {
-        auto guard = std::experimental::scope_fail{[&] { exit_status = true; }};
+        auto guard = scope::scope_fail{[&] { exit_status = true; }};
         maybe_throw();
     } catch (...) {
         did_throw = true;
@@ -52,7 +55,7 @@ int main() {
     // Using scope_success: runs only if no exception occurs
     exit_status = did_throw = false;
     try {
-        auto guard = std::experimental::scope_success{[&] { exit_status = true; }};
+        auto guard = scope::scope_success{[&] { exit_status = true; }};
         maybe_throw();
     } catch (...) {
         did_throw = true;
