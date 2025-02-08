@@ -87,6 +87,9 @@ jobs:
         uses: TheMrMilchmann/setup-msvc-dev@v3
         with:
           arch: x64
+      - name: Setup LLVM
+        if: matrix.platform.toolchain == 'cmake/llvm-toolchain.cmake'
+        run: sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
       - name: Setup Macos
         if: startsWith(matrix.platform.os, 'macos')
         run: sudo chmod -R 777 /opt/
