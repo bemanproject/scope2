@@ -89,7 +89,10 @@ jobs:
           arch: x64
       - name: Setup LLVM
         if: matrix.platform.toolchain == 'cmake/llvm-toolchain.cmake'
-        run: sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo bash llvm.sh 19
       - name: Setup Macos
         if: startsWith(matrix.platform.os, 'macos')
         run: sudo chmod -R 777 /opt/
