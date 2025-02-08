@@ -176,12 +176,16 @@ jobs:
         compilers:
           - class: GNU
             version: 14
+            toolchain: "cmake/gnu-toolchain.cmake"
           - class: GNU
             version: 13
+            toolchain: "cmake/gnu-toolchain.cmake"
           - class: LLVM
             version: 20
+            toolchain: "cmake/llvm-toolchain.cmake"
           - class: LLVM
             version: 19
+            toolchain: "cmake/llvm-toolchain.cmake"
     name: "Compiler: ${{ matrix.compilers.class }} ${{ matrix.compilers.version }}"
     steps:
       - uses: actions/checkout@v4
@@ -202,8 +206,10 @@ jobs:
             sudo apt-get install -y $CC
             sudo apt-get install -y $CXX
 
-            $CC --version
-            $CXX --version
+            sudo ln -sf "$(which $CC)" /usr/bin/gcc
+            sudo ln -sf "$(which $CXX)" /usr/bin/g++
+
+            /usr/bin/g++ --version
           else
             wget https://apt.llvm.org/llvm.sh
             chmod +x llvm.sh
@@ -212,18 +218,15 @@ jobs:
             CC=clang-${{ matrix.compilers.version }}
             CXX=clang++-${{ matrix.compilers.version }}
 
-            $CC --version
-            $CXX --version
-          fi
+            sudo ln -sf "$(which $CC)" /usr/bin/clang
+            sudo ln -sf "$(which $CXX)" /usr/bin/clang++
 
-          echo "CC=$CC" >> "$GITHUB_OUTPUT"
-          echo "CXX=$CXX" >> "$GITHUB_OUTPUT"
+            /usr/bin/clang++ --version
+          fi
       - name: Configure CMake
         run: |
-          cmake -B build -S . -DCMAKE_CXX_STANDARD=20
+          cmake -B build -S . -DCMAKE_CXX_STANDARD=20 -DCMAKE_TOOLCHAIN_FILE="${{ matrix.compilers.toolchain }}"
         env:
-          CC: ${{ steps.install-compiler.outputs.CC }}
-          CXX: ${{ steps.install-compiler.outputs.CXX }}
           CMAKE_GENERATOR: "Ninja Multi-Config"
       - name: Build Debug
         run: |
