@@ -144,7 +144,7 @@ jobs:
           ninja --version
       - name: Configure CMake
         run: |
-          cmake -B build -S . -DCMAKE_CXX_STANDARD=17 ${{ matrix.args.arg }}
+          cmake -B build -S . -DCMAKE_CXX_STANDARD=20 -DCMAKE_TOOLCHAIN_FILE="cmake/gnu-toolchain.cmake" ${{ matrix.args.arg }}
         env:
           CMAKE_GENERATOR: "Ninja Multi-Config"
       - name: Build Release
