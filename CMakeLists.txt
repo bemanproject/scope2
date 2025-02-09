@@ -2,7 +2,11 @@
 
 cmake_minimum_required(VERSION 3.25)
 
-project(beman.scope DESCRIPTION "Generic Scope Guard" LANGUAGES CXX)
+project(beman.scope DESCRIPTION "Generic Scope Guard" LANGUAGES CXX
+
+set(CMAKE_CXX_STANDARD 20)            # Set the C++ standard to C++20
+set(CMAKE_CXX_STANDARD_REQUIRED ON)   # Ensure the standard is required
+set(CMAKE_CXX_EXTENSIONS OFF)         # Disable compiler-specific extensions
 
 enable_testing()
 
