@@ -4,6 +4,19 @@ cmake_minimum_required(VERSION 3.25)
 
 project(beman.scope DESCRIPTION "Generic Scope Guard" LANGUAGES CXX)
 
+# Define an option for the C++ standard with a default of 20
+option(CXX_STANDARD "C++ standard to use (minimum C++20)" 20)
+
+# Ensure the specified standard is at least C++20
+if(CXX_STANDARD LESS 20)
+    message(FATAL_ERROR "The minimum required C++ standard is C++20")
+endif()
+
+# Set the C++ standard based on the user input
+set(CMAKE_CXX_STANDARD ${CXX_STANDARD})
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 enable_testing()
 
 # [CMAKE.SKIP_TESTS]
