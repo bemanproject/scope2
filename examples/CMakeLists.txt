@@ -9,4 +9,3 @@ foreach(example ${ALL_EXAMPLES})
     target_sources(beman.scope.examples.${example} PRIVATE ${example}.cpp)
     target_link_libraries(beman.scope.examples.${example} beman::scope)
 endforeach()
-

@@ -8,7 +8,7 @@ project(beman.scope DESCRIPTION "Generic Scope Guard" LANGUAGES CXX)
 option(CXX_STANDARD "C++ standard to use (minimum C++20)" 20)
 
 # Ensure the specified standard is at least C++20
-if (CXX_STANDARD LESS 20)
+if(CXX_STANDARD LESS 20)
     message(FATAL_ERROR "The minimum required C++ standard is C++20")
 endif()
 
