@@ -10,55 +10,56 @@ namespace scope = beman::scope;
 
 void print_exit_status(std::string_view name, bool exit_status, bool did_throw) {
     std::cout << name << ":\n";
-    std::cout << "  Throwed exception  " << (did_throw ? "yes" : "no") << "\n";
-    std::cout << "  Exit status        " << (exit_status ? "finished" : "pending") << "\n\n";
+    std::cout << "  Exception thrown: " << (did_throw ? "yes" : "no") << "\n";
+    std::cout << "  Exit function:    " << (exit_status ? "invoked" : "not invoked") << "\n\n";
 }
 
 // Randomly throw an exception (50% chance)
 void maybe_throw() {
-    if (std::rand() >= RAND_MAX / 2)
+    if (std::rand() >= RAND_MAX / 2) {
         throw std::exception{};
+    }
 }
 
 int main() {
-    bool exit_status{false}, did_throw{false};
+    bool is_exit_func_invoked{false}, is_exception_thrown{false};
 
     // Manual handling at "end of scope"
     try {
         maybe_throw();
-        exit_status = true;
+        is_exit_func_invoked = true;
     } catch (...) {
-        did_throw = true;
+        is_exception_thrown = true;
     }
-    print_exit_status("Manual handling", exit_status, did_throw);
+    print_exit_status("Manual handling", is_exit_func_invoked, is_exception_thrown);
 
     // Using scope_exit: runs on scope exit (success or exception)
-    exit_status = did_throw = false;
+    is_exit_func_invoked = is_exception_thrown = false;
     try {
-        auto guard = scope::scope_exit{[&] { exit_status = true; }};
+        auto guard = scope::scope_exit{[&] { is_exit_func_invoked = true; }};
         maybe_throw();
     } catch (...) {
-        did_throw = true;
+        is_exception_thrown = true;
     }
-    print_exit_status("scope_exit", exit_status, did_throw);
+    print_exit_status("scope_exit", is_exit_func_invoked, is_exception_thrown);
 
     // Using scope_fail: runs only if an exception occurs
-    exit_status = did_throw = false;
+    is_exit_func_invoked = is_exception_thrown = false;
     try {
-        auto guard = scope::scope_fail{[&] { exit_status = true; }};
+        auto guard = scope::scope_fail{[&] { is_exit_func_invoked = true; }};
         maybe_throw();
     } catch (...) {
-        did_throw = true;
+        is_exception_thrown = true;
     }
-    print_exit_status("scope_fail", exit_status, did_throw);
+    print_exit_status("scope_fail", is_exit_func_invoked, is_exception_thrown);
 
     // Using scope_success: runs only if no exception occurs
-    exit_status = did_throw = false;
+    is_exit_func_invoked = is_exception_thrown = false;
     try {
-        auto guard = scope::scope_success{[&] { exit_status = true; }};
+        auto guard = scope::scope_success{[&] { is_exit_func_invoked = true; }};
         maybe_throw();
     } catch (...) {
-        did_throw = true;
+        is_exception_thrown = true;
     }
-    print_exit_status("scope_success", exit_status, did_throw);
+    print_exit_status("scope_success", is_exit_func_invoked, is_exception_thrown);
 }
