@@ -10,35 +10,137 @@
 
 // This is testing the "language" - the ways in which we want to "start" the scope guard.
 
-TEST_CASE("Construct scope_exit") {
+TEST_CASE("scope_exit") {
 
-    beman::scope::scope_exit guard_exit1([] {});
-    beman::scope::scope_exit guard_exit2 = [] {};
-    beman::scope::scope_exit guard_exit3 = {[] {}};
+    SECTION("Constructing") {
+        beman::scope::scope_exit exit_guard1([] {});
+        // beman::scope::scope_exit exit_guard2 = [] {};   // can't do: no conversion
+        // beman::scope::scope_exit exit_guard3 = {[] {}}; // can't do: explict constructor
 
-    auto guard_exit4 = beman::scope::scope_exit([] {});
+        auto exit_guard4 = beman::scope::scope_exit([] {});
 
-    REQUIRE(true);
+        REQUIRE(true);
+    }
+
+    SECTION("Using") {
+        SECTION("Exception thrown") {
+            bool is_exception_thrown  = false;
+            bool is_exit_func_invoked = false;
+
+            try {
+                beman::scope::scope_exit exit_guard([&] { is_exit_func_invoked = true; });
+
+                throw std::exception{};
+            } catch (...) {
+                is_exception_thrown = true;
+            }
+
+            REQUIRE(is_exception_thrown);
+            REQUIRE(is_exit_func_invoked == true);
+        }
+
+        SECTION("NO Exception thrown") {
+            bool is_exception_thrown  = false;
+            bool is_exit_func_invoked = false;
+
+            try {
+                beman::scope::scope_exit exit_guard([&] { is_exit_func_invoked = true; });
+            } catch (...) {
+                is_exception_thrown = true;
+            }
+
+            REQUIRE_FALSE(is_exception_thrown);
+            REQUIRE(is_exit_func_invoked == true);
+        }
+    }
 }
 
-TEST_CASE("Construct scope_fail") {
+TEST_CASE("scope_fail") {
 
-    beman::scope::scope_fail guard_exit1([] {});
-    beman::scope::scope_fail guard_exit2 = [] {};
-    beman::scope::scope_fail guard_exit3 = {[] {}};
+    SECTION("Constructing") {
+        beman::scope::scope_fail exit_guard1([] {});
+        // beman::scope::scope_fail exit_guard2 = [] {};   // can't do: no conversion
+        // beman::scope::scope_fail exit_guard3 = {[] {}}; // can't do: explict constructor
 
-    auto guard_exit4 = beman::scope::scope_fail([] {});
+        auto exit_guard4 = beman::scope::scope_fail([] {});
 
-    REQUIRE(true);
+        REQUIRE(true);
+    }
+
+    SECTION("Using") {
+        SECTION("Exception thrown") {
+            bool is_exception_thrown  = false;
+            bool is_exit_func_invoked = false;
+
+            try {
+                beman::scope::scope_fail exit_guard([&] { is_exit_func_invoked = true; });
+
+                throw std::exception{};
+            } catch (...) {
+                is_exception_thrown = true;
+            }
+
+            REQUIRE(is_exception_thrown);
+            REQUIRE(is_exit_func_invoked == true);
+        }
+
+        SECTION("NO Exception thrown") {
+            bool is_exception_thrown  = false;
+            bool is_exit_func_invoked = false;
+
+            try {
+                beman::scope::scope_fail exit_guard([&] { is_exit_func_invoked = true; });
+            } catch (...) {
+                is_exception_thrown = true;
+            }
+
+            REQUIRE_FALSE(is_exception_thrown);
+            REQUIRE(is_exit_func_invoked == false);
+        }
+    }
 }
 
-TEST_CASE("Construct scope_success") {
+TEST_CASE("scope_success") {
 
-    beman::scope::scope_success guard_exit1([] {});
-    beman::scope::scope_success guard_exit2 = [] {};
-    beman::scope::scope_success guard_exit3 = {[] {}};
+    SECTION("Constructing") {
+        beman::scope::scope_success exit_guard1([] {});
+        // beman::scope::scope_success exit_guard2 = [] {};   // can't do: no conversion
+        // beman::scope::scope_success exit_guard3 = {[] {}}; // can't do: explict constructor
 
-    auto guard_exit4 = beman::scope::scope_success([] {});
+        auto exit_guard4 = beman::scope::scope_success([] {});
 
-    REQUIRE(true);
+        REQUIRE(true);
+    }
+
+    SECTION("Using") {
+        SECTION("Exception thrown") {
+            bool is_exception_thrown  = false;
+            bool is_exit_func_invoked = false;
+
+            try {
+                beman::scope::scope_success exit_guard([&] { is_exit_func_invoked = true; });
+
+                throw std::exception{};
+            } catch (...) {
+                is_exception_thrown = true;
+            }
+
+            REQUIRE(is_exception_thrown);
+            REQUIRE(is_exit_func_invoked == false);
+        }
+
+        SECTION("NO Exception thrown") {
+            bool is_exception_thrown  = false;
+            bool is_exit_func_invoked = false;
+
+            try {
+                beman::scope::scope_success exit_guard([&] { is_exit_func_invoked = true; });
+            } catch (...) {
+                is_exception_thrown = true;
+            }
+
+            REQUIRE_FALSE(is_exception_thrown);
+            REQUIRE(is_exit_func_invoked == true);
+        }
+    }
 }

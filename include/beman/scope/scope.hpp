@@ -173,7 +173,6 @@ using scope_fail = scope_guard<ExitFunc, ExecuteOnlyWhenException>;
 
 //=========================================================
 
-
 // -- 7.6.1 Class template unique_resource [scope.unique_resource.class] --
 //
 //        template <class R, class D>
