@@ -14,7 +14,10 @@ target_sources(beman.scope.tests.scope PRIVATE scope.test.cpp)
 
 target_link_libraries(beman.scope.tests.scope PRIVATE Catch2::Catch2WithMain)
 
-target_include_directories(beman.scope.tests.scope PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(
+    beman.scope.tests.scope
+    PRIVATE ${CMAKE_SOURCE_DIR}/include
+)
 
 include(CTest)
 include(Catch)
