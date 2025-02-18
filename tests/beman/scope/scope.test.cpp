@@ -14,9 +14,13 @@ TEST_CASE("scope_guard") {
     SECTION("Constructing") {
 
         auto exit_guard = beman::scope::scope_guard{[] {}, [] { return true; }};
-        // exit_guard.release(); // doesn't compile (as planned)- NOT releasable
+        // vvv doesn't compile (as planned)- NOT releasable
+        // exit_guard.release();
 
-        // auto exit_guard2 = beman::scope::scope_guard{[] {}, [] { return 1; }}; // Doesn't compile, return must be bool
+        REQUIRE(sizeof(decltype(exit_guard)) == 1);
+
+        // vvv Doesn't compile (as planned), return must be bool
+        // auto exit_guard2 = beman::scope::scope_guard{[] {}, [] { return 1; }};
 
         REQUIRE(true);
     }

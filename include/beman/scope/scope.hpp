@@ -4,6 +4,7 @@
 #define BEMAN_SCOPE_HPP
 
 #include <concepts>
+#include <functional>
 #include <exception>
 
 namespace beman::scope {
@@ -78,7 +79,7 @@ struct ExecuteAlways;
 //=========================================================
 
 template <invocable_return<void> ExitFunc, scope_invoke_checker InvokeChecker = ExecuteAlways>
-class scope_guard : public InvokeChecker {
+class scope_guard {
   public:
     explicit scope_guard(ExitFunc&& exit_func) /*noexcept(see below)*/
         : m_exit_func(std::move(exit_func))    //
@@ -185,17 +186,19 @@ class Releasable<void> {
 };
 
 template <scope_invoke_checker InvokeChecker>
-class Releasable<InvokeChecker> : private InvokeChecker {
+class Releasable<InvokeChecker> {
   public:
     Releasable() = default;
 
     Releasable(InvokeChecker&& invoke_checker) : InvokeChecker(std::move(invoke_checker)) {}
 
-    bool can_invoke() const { return m_can_invoke && static_cast<const InvokeChecker*>(this)->can_invoke(); }
+    bool can_invoke() const { return m_can_invoke && m_invoke_checker.can_invoke(); }
 
     void release() { m_can_invoke = false; }
 
   private:
+    [[no_unique_address]] InvokeChecker m_invoke_checker = {};
+
     bool m_can_invoke = true;
 };
 
