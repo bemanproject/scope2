@@ -45,8 +45,31 @@ namespace beman::scope {
 
 //=========================================================
 
+template <typename T>
+concept HasCanInvoke = requires(T t) {
+    { t.can_invoke() } -> std::convertible_to<bool>;
+};
+
+template <typename T>
+concept HasStaticCanInvoke = requires {
+    { T::can_invoke() } -> std::convertible_to<bool>;
+};
+
+template <typename T>
+concept HasRelease = requires(T t) {
+    { t.release() } -> std::same_as<void>;
+};
+
+template <typename T>
+concept HasStaticRelease = requires {
+    { T::release() } -> std::same_as<void>;
+};
+
 template <typename F, typename R, typename... Args>
 concept invocable_return = std::invocable<F, Args...> && std::same_as<std::invoke_result_t<F, Args...>, R>;
+
+template <typename T>
+concept scope_invoke_checker = HasStaticCanInvoke<T> || HasCanInvoke<T> || invocable_return<T, bool>;
 
 //=========================================================
 
@@ -54,52 +77,59 @@ struct ExecuteAlways;
 
 //=========================================================
 
-template <invocable_return<void> ExitFunc, invocable_return<bool> ExecuteCondition = ExecuteAlways>
-class scope_guard {
+template <invocable_return<void> ExitFunc, scope_invoke_checker InvokeChecker = ExecuteAlways>
+class scope_guard : public InvokeChecker {
   public:
-    explicit scope_guard(ExitFunc&& func) /*noexcept(see below)*/
-        : m_exit_func(std::move(func))    //
+    explicit scope_guard(ExitFunc&& exit_func) /*noexcept(see below)*/
+        : m_exit_func(std::move(exit_func))    //
     {}
 
-    scope_guard(scope_guard&& rhs) noexcept
-        : m_exit_func{std::move(rhs)}, m_invoke_condition_func{std::move(rhs.m_invoke_condition_func)} {}
+    explicit scope_guard(ExitFunc&& exit_func, InvokeChecker&& invoke_checker) /*noexcept(see below)*/
+        : m_exit_func(std::move(exit_func)),
+          m_invoke_checker{std::move(invoke_checker)} //
+    {}
+
+    explicit scope_guard(scope_guard&& rhs) noexcept
+        : m_exit_func{std::move(rhs)},
+          m_invoke_checker{std::move(rhs.m_invoke_checker)} //
+    {}
 
     scope_guard(const scope_guard&)            = delete;
     scope_guard& operator=(const scope_guard&) = delete;
     scope_guard& operator=(scope_guard&&)      = delete;
 
     ~scope_guard() /*noexcept(see below)*/ {
-        if (can_invoke_check(m_invoke_condition_func)) {
+        if (can_invoke_check(m_invoke_checker)) {
             m_exit_func();
         }
     }
 
-    void release() noexcept {
-        // Needs implementation
+    void release() noexcept
+        requires HasRelease<InvokeChecker> || HasStaticRelease<InvokeChecker>
+    {
+        if constexpr (HasRelease<InvokeChecker>) {
+            m_invoke_checker.release();
+        } else {
+            InvokeChecker::release();
+        }
     }
 
   private:
-    ExitFunc                               m_exit_func;
-    [[no_unique_address]] ExecuteCondition m_invoke_condition_func;
+    ExitFunc                            m_exit_func;
+    [[no_unique_address]] InvokeChecker m_invoke_checker;
 
     template <typename T>
-    bool can_invoke_check(const T& obj) const {
-        if constexpr (requires(T /*t*/) {
-                          { T::can_invoke() } -> std::convertible_to<bool>;
-                      }) {
+    static bool can_invoke_check(const T& obj) {
+        if constexpr (HasStaticCanInvoke<T>) {
             return T::can_invoke();
-        } else if constexpr (requires(T t) {
-                                 { t.can_invoke() } -> std::convertible_to<bool>;
-                             }) {
+        } else if constexpr (HasCanInvoke<T>) {
             return obj.can_invoke();
-        } else if constexpr (requires {
-                                 { T::operator()() } -> std::convertible_to<bool>;
-                             }) {
-            return T::operator()();
-        } else if constexpr (requires(T t) {
-                                 { t.operator()() } -> std::convertible_to<bool>;
-                             }) {
-            return obj();
+        } else if constexpr (invocable_return<T, bool>) {
+            return std::invoke(obj);
+            //} else if constexpr (HasStaticParenthesisOperator<T>) {
+            //    return T::operator()();
+            //} else if constexpr (HasParenthesisOperator<T>) {
+            //    return obj();
         } else {
             return true; // Default behavior if no check function is available
         }
@@ -109,7 +139,65 @@ class scope_guard {
 //=========================================================
 
 template <std::invocable ExitFunc>
-scope_guard(ExitFunc) -> scope_guard<ExitFunc>;
+scope_guard(ExitFunc&&) -> scope_guard<ExitFunc>;
+
+template <std::invocable ExitFunc, scope_invoke_checker InvokeChecker>
+scope_guard(ExitFunc&&, InvokeChecker&&) -> scope_guard<ExitFunc, InvokeChecker>;
+
+//=========================================================
+//=========================================================
+//=========================================================
+
+struct ExecuteAlways {
+    [[nodiscard]] static constexpr bool can_invoke() { return true; }
+};
+
+class ExecuteWhenNoException {
+  public:
+    [[nodiscard]] bool can_invoke() const { return m_uncaught_on_creation >= std::uncaught_exceptions(); }
+
+  private:
+    int m_uncaught_on_creation = std::uncaught_exceptions();
+};
+
+class ExecuteOnlyWhenException {
+  public:
+    [[nodiscard]] bool can_invoke() const { return m_uncaught_on_creation < std::uncaught_exceptions(); }
+
+  private:
+    int m_uncaught_on_creation = std::uncaught_exceptions();
+};
+
+//=========================================================
+
+template <typename T = void>
+class Releasable;
+
+template <>
+class Releasable<void> {
+  public:
+    bool can_invoke() const { return m_can_invoke; }
+
+    void release() { m_can_invoke = false; }
+
+  private:
+    bool m_can_invoke = true;
+};
+
+template <scope_invoke_checker InvokeChecker>
+class Releasable<InvokeChecker> : private InvokeChecker {
+  public:
+    Releasable() = default;
+
+    Releasable(InvokeChecker&& invoke_checker) : InvokeChecker(std::move(invoke_checker)) {}
+
+    bool can_invoke() const { return m_can_invoke && static_cast<const InvokeChecker*>(this)->can_invoke(); }
+
+    void release() { m_can_invoke = false; }
+
+  private:
+    bool m_can_invoke = true;
+};
 
 //=========================================================
 
@@ -127,36 +215,14 @@ scope_guard(ExitFunc) -> scope_guard<ExitFunc>;
 
 //=========================================================
 
-struct ExecuteAlways {
-    [[nodiscard]] constexpr bool operator()() const { return true; }
-};
-
-struct ExecuteWhenNoException {
-
-    [[nodiscard]] bool operator()() const { return uncaught_on_creation >= std::uncaught_exceptions(); }
-
-  private:
-    int uncaught_on_creation = std::uncaught_exceptions();
-};
-
-struct ExecuteOnlyWhenException {
-
-    [[nodiscard]] bool operator()() const { return uncaught_on_creation < std::uncaught_exceptions(); }
-
-  private:
-    int uncaught_on_creation = std::uncaught_exceptions();
-};
-
-//=========================================================
+template <class ExitFunc>
+using scope_exit = scope_guard<ExitFunc, Releasable<>>;
 
 template <class ExitFunc>
-using scope_exit = scope_guard<ExitFunc>;
+using scope_success = scope_guard<ExitFunc, Releasable<ExecuteWhenNoException>>;
 
 template <class ExitFunc>
-using scope_success = scope_guard<ExitFunc, ExecuteWhenNoException>;
-
-template <class ExitFunc>
-using scope_fail = scope_guard<ExitFunc, ExecuteOnlyWhenException>;
+using scope_fail = scope_guard<ExitFunc, Releasable<ExecuteOnlyWhenException>>;
 
 //=========================================================
 
