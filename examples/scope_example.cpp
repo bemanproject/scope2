@@ -3,15 +3,20 @@
 #include <beman/scope/scope.hpp>
 
 #include <cstdlib>
+#include <format>
 #include <iostream>
 #include <string_view>
 
 namespace scope = beman::scope;
 
 void print_exit_status(std::string_view name, bool exit_status, bool did_throw) {
-    std::cout << name << ":\n";
-    std::cout << "  Exception thrown: " << (did_throw ? "yes" : "no") << "\n";
-    std::cout << "  Exit function:    " << (exit_status ? "invoked" : "not invoked") << "\n\n";
+    std::cout << std::format("{}:\n"
+                             "  Exception thrown: {}\n"
+                             "  Exit function:    {}\n"
+                             "\n",
+                             name,
+                             (did_throw ? "yes" : "no"),
+                             (exit_status ? "invoked" : "not invoked"));
 }
 
 // Randomly throw an exception (50% chance)
@@ -22,7 +27,8 @@ void maybe_throw() {
 }
 
 int main() {
-    bool is_exit_func_invoked{false}, is_exception_thrown{false};
+    bool is_exit_func_invoked {false};
+    bool is_exception_thrown {false};
 
     // Manual handling at "end of scope"
     try {

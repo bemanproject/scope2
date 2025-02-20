@@ -12,17 +12,44 @@
 
 TEST_CASE("scope_guard") {
     SECTION("Constructing") {
+        SECTION("lambdas") {
 
-        auto exit_guard = beman::scope::scope_guard{[] {}, [] { return true; }};
-        // vvv doesn't compile (as planned)- NOT releasable
-        // exit_guard.release();
+            auto exit_guard0 = beman::scope::scope_guard{[] {}};
 
-        REQUIRE(sizeof(decltype(exit_guard)) == 1);
+            auto exit_guard1 = beman::scope::scope_guard{[] {}, [] { return true; }};
 
-        // vvv Doesn't compile (as planned), return must be bool
-        // auto exit_guard2 = beman::scope::scope_guard{[] {}, [] { return 1; }};
+            // vvv doesn't compile (as planned)- NOT releasable
+            // exit_guard1.release();
+            // ^^^
 
-        REQUIRE(true);
+            auto exit_guard2 = beman::scope::scope_guard{[] {}, [] { return 1; }};
+
+            REQUIRE(true);
+        }
+
+        SECTION("Function object") {
+            struct FunctionObject {
+                void operator()() {
+                    is_executed = true;
+                    invoked_count++;
+                }
+
+                bool is_executed   = false;
+                int  invoked_count = 0;
+
+            } exit_func_onj;
+
+            {
+                auto exit_guard3_1 = beman::scope::scope_guard{exit_func_onj};
+                auto exit_guard3_2 = beman::scope::scope_guard{exit_func_onj};
+                auto exit_guard3_3 = beman::scope::scope_guard{exit_func_onj};
+                auto exit_guard3_4 = beman::scope::scope_guard{exit_func_onj};
+                auto exit_guard3_5 = beman::scope::scope_guard{exit_func_onj};
+            }
+
+            REQUIRE(exit_func_onj.is_executed == true);
+            REQUIRE(exit_func_onj.invoked_count == 5);
+        }
     }
 }
 
@@ -30,7 +57,9 @@ TEST_CASE("scope_exit") {
 
     SECTION("Constructing") {
         beman::scope::scope_exit exit_guard1([] {});
+
         // beman::scope::scope_exit exit_guard2 = [] {};   // can't do: no conversion
+
         // beman::scope::scope_exit exit_guard3 = {[] {}}; // can't do: explict constructor
 
         auto exit_guard4 = beman::scope::scope_exit([] {});
@@ -115,7 +144,9 @@ TEST_CASE("scope_fail") {
 
     SECTION("Constructing") {
         beman::scope::scope_fail exit_guard1([] {});
+
         // beman::scope::scope_fail exit_guard2 = [] {};   // can't do: no conversion
+
         // beman::scope::scope_fail exit_guard3 = {[] {}}; // can't do: explict constructor
 
         auto exit_guard4 = beman::scope::scope_fail([] {});
@@ -198,7 +229,9 @@ TEST_CASE("scope_success") {
 
     SECTION("Constructing") {
         beman::scope::scope_success exit_guard1([] {});
+
         // beman::scope::scope_success exit_guard2 = [] {};   // can't do: no conversion
+
         // beman::scope::scope_success exit_guard3 = {[] {}}; // can't do: explict constructor
 
         auto exit_guard4 = beman::scope::scope_success([] {});
